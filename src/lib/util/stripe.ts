@@ -13,7 +13,7 @@ export async function createPaymentIntent(
   const paymentIntent: Stripe.PaymentIntent =
     await stripe.paymentIntents.create({
       amount: Number(data.get('amount') as string),
-      automatic_payment_methods: { enabled: true },
+      payment_method_types: ['card', 'us_bank_account'],
       currency: 'usd',
     })
 
