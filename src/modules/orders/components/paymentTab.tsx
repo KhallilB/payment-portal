@@ -11,15 +11,7 @@ export default function PaymentTab({ variant, selected, ...props }: Props) {
 
   switch (variant) {
     case 'stripe':
-      content = (
-        <Image
-          src="/stripe.svg"
-          width={0}
-          height={0}
-          alt="Stripe"
-          className="h-full w-auto"
-        />
-      )
+      content = <h2 className="text-md text-center font-bold">Stripe</h2>
       break
     case 'wire-transfer':
       content = <h2 className="text-md text-center font-bold">Wire Transfer</h2>

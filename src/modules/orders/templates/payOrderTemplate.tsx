@@ -1,9 +1,12 @@
 'use client'
 import { useState } from 'react'
+
 import PaymentTab from '@/modules/orders/components/paymentTab'
 import StripePayment from '@/modules/orders/components/stripePayment'
 import CheckPayment from '@/modules/orders/components/checkPayment'
 import WirePayment from '@/modules/orders/components/wirePayment'
+
+import { Orders } from '@/lib/config/index'
 
 interface Props {
   params: {
@@ -13,6 +16,7 @@ interface Props {
 
 export default function PayOrderTemplate({ params }: Props) {
   const [selected, setSelected] = useState('stripe')
+  const [order, setOrder] = useState(Orders.find((o) => o.id === params.id))
 
   return (
     <div className="container mx-auto p-6">
@@ -41,7 +45,7 @@ export default function PayOrderTemplate({ params }: Props) {
       </div>
 
       <div className="mt-4">
-        {selected === 'stripe' && <StripePayment />}
+        {selected === 'stripe' && <StripePayment total={order?.total!} />}
         {selected === 'wire-transfer' && <WirePayment />}
         {selected === 'check' && <CheckPayment />}
       </div>
