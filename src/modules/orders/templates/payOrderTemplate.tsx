@@ -45,7 +45,7 @@ export default function PayOrderTemplate({ params }: Props) {
       </div>
 
       <div className="mt-4">
-        {selected === 'stripe' && <StripePayment total={order?.total!} />}
+        {selected === 'stripe' && <StripePayment total={order?.total!} id={order?.id!} />}
         {selected === 'wire-transfer' && <WirePayment />}
         {selected === 'check' && <CheckPayment />}
       </div>

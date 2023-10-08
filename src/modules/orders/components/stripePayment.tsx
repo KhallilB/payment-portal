@@ -13,8 +13,9 @@ import Button from '@/modules/common/button'
 
 import getStripe from '@/lib/util/load-stripe'
 import { createPaymentIntent } from '@/lib/util/stripe'
+import { get } from 'http'
 
-export function PaymentForm({ total }: { total: number }) {
+export function PaymentForm({ amount, id }: { amount: number; id: string }) {
   const [paymentType, setPaymentType] = useState<string>('')
   const [payment, setPayment] = useState<{
     status: 'initial' | 'processing' | 'error' | 'success'
@@ -23,6 +24,13 @@ export function PaymentForm({ total }: { total: number }) {
 
   const stripe = useStripe()
   const elements = useElements()
+
+  const handlePaymentError = (err: StripeError) => {
+    const { message } = err
+    setPayment({ status: 'error' })
+    toast.error(message ?? 'An unknown error occurred')
+    setLoading(false)
+  }
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     try {
@@ -35,9 +43,7 @@ export function PaymentForm({ total }: { total: number }) {
       const { error: submitError } = await elements.submit()
 
       if (submitError) {
-        setPayment({ status: 'error' })
-        toast.error(submitError.message ?? 'An unknown error occurred')
-        setLoading(false)
+        handlePaymentError(submitError)
         return
       }
 
@@ -54,41 +60,40 @@ export function PaymentForm({ total }: { total: number }) {
           },
           redirect: 'if_required',
         })
-        .then((result) => {
-          console.log('result', result.error)
+        .then(async (result) => {
           if (result.error) {
-            setPayment({ status: 'error' })
-            setLoading(false)
-            toast.error(result.error.message ?? 'An unknown error occurred')
+            handlePaymentError(result.error)
             return
           }
+          setPayment({ status: 'success' })
           toast.success('Payment successful')
           setLoading(false)
         })
         .catch((err) => {
-          console.log('err', err)
-          setLoading(false)
+          handlePaymentError(err)
         })
     } catch (err) {
-      const { message } = err as StripeError
-
-      setPayment({ status: 'error' })
-      toast.error(message ?? 'An unknown error occurred')
-      setLoading(false)
+      handlePaymentError(err as StripeError)
     }
   }
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onChange={(e) => console.log(e)}>
         {!stripe || !elements ? (
           <div className="my-8 flex h-12 w-full items-center">
             <Loading />
           </div>
         ) : (
           <>
-            <input type="hidden" name="amount" value={total} />
-            <PaymentElement />
+            <input type="hidden" name="id" value={id} />
+            <input type="hidden" name="amount" value={amount} />
+            <input type="hidden" name="paymentType" value={paymentType} />
+            <PaymentElement
+              onChange={(e) => {
+                setPaymentType(e.value.type)
+              }}
+            />
             <div className="my-8 flex h-12 w-full items-center">
               <Button
                 type="submit"
@@ -108,9 +113,12 @@ export function PaymentForm({ total }: { total: number }) {
 
 export default function StripePayment({
   total,
+  id,
 }: {
   total: number
+  id: string
 }): JSX.Element {
+  const amount = total * 100
   return (
     <Elements
       stripe={getStripe()}
@@ -124,10 +132,10 @@ export default function StripePayment({
         currency: 'usd',
         mode: 'payment',
         payment_method_types: ['card', 'us_bank_account'],
-        amount: total,
+        amount,
       }}
     >
-      <PaymentForm total={total} />
+      <PaymentForm amount={amount} id={id} />
     </Elements>
   )
 }
