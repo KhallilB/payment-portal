@@ -1,3 +1,4 @@
+'use client'
 import OrderCard from '@/modules/orders/components/orderCard'
 import { Orders } from '@/lib/config'
 

@@ -1,15 +1,18 @@
-import { Order } from '@/lib/types'
+import { useRouter } from 'next/navigation'
 import Button from '@/modules/common/button'
+import { Order } from '@/lib/types'
 
 interface Props {
   order: Order
 }
 
-const formatCurrency = (value: number) => {
-  return value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
-}
-
 export default function OrderCard({ order }: Props) {
+  const router = useRouter()
+
+  const formatCurrency = (value: number) => {
+    return value.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+  }
+
   return (
     <div className="border-black-700 my-4 flex flex-col items-start rounded-md border bg-white p-4 shadow-md lg:flex-row lg:items-center lg:justify-between">
       <div className="border-red items- flex h-full w-full flex-col justify-between lg:flex-row lg:items-center">
@@ -28,10 +31,19 @@ export default function OrderCard({ order }: Props) {
       </div>
 
       <div className="my-4 flex w-full flex-row lg:w-3/12">
-        <Button className="mx-4" variant="primary">
+        <Button
+          className="mx-4"
+          variant="primary"
+          onClick={() => router.push(`/order/${order.id}/pay`)}
+        >
           Pay
         </Button>
-        <Button variant="secondary">View</Button>
+        <Button
+          variant="secondary"
+          onClick={() => router.push(`/order/${order.id}`)}
+        >
+          View
+        </Button>
       </div>
     </div>
   )
