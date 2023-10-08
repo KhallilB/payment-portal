@@ -1,14 +1,15 @@
+import PayOrderTemplate from '@/modules/orders/templates/payOrderTemplate'
+
 interface Props {
-    params: {
-      id: string
-    }
+  params: {
+    id: string
   }
-  
-  export default function PayOrder({ params }: Props) {
-    return (
-      <div className="container mx-auto p-6">
-        <h1>Pay Order {params.id}</h1>
-      </div>
-    )
-  }
-  
+}
+
+export default function PayOrder({ params }: Props) {
+  return (
+    <div className="container mx-auto p-6">
+      <PayOrderTemplate params={params} />
+    </div>
+  )
+}

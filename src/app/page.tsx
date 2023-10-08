@@ -1,10 +1,10 @@
-import OrderList from '@/modules/orders/templates/orderList'
+import OrderListTemplate from '@/modules/orders/templates/orderListTemplate'
 
 export default function Home() {
   return (
     <div className="container mx-auto p-6">
       <h1>Home</h1>
-      <OrderList />
+      <OrderListTemplate />
     </div>
   )
 }
