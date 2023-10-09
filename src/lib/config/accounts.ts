@@ -1,4 +1,4 @@
-import { Account } from '@/lib/types'
+import { Account, Check } from '@/lib/types'
 
 export const accounts: Account[] = [
   {
@@ -24,6 +24,16 @@ export const accounts: Account[] = [
   },
 ]
 
+export const checks: Check[] = [
+  // Valid check
+  {
+    id: '1',
+    checkNumber: '1234',
+    accountNumber: '123456789',
+    amount: 0,
+  },
+]
+
 export const wire = async (
   payeeId: string,
   payerId: string,
@@ -34,18 +44,43 @@ export const wire = async (
     throw new Error('Insufficient funds')
   }
 
-  // Deduct the amount from the payer's account
   deductFundsFromAccount(payeeId, amount)
 
   addFundsToAccount(payerId, amount)
 
-  // Log the transaction (you can use a database for this)
-  logTransaction(payerId, payeeId, amount)
-
-  console.log('accounts', accounts)
+  logTransaction(payerId, payeeId, amount, 'check')
 
   return {
     message: 'Wire transfer successful',
+  }
+}
+
+export const payByCheck = async (
+  payeeId: string,
+  payerId: string,
+  checkNumber: string,
+  checkAmount: number,
+  total: number
+) => {
+  const check = checks.find((check) => check.checkNumber === checkNumber)
+  const payerAccount = accounts.find((account) => account.id === payerId)
+
+  if (!check) {
+    throw new Error('Check not found')
+  }
+
+  if (check.accountNumber !== payerAccount?.accountNumber) {
+    throw new Error('Invalid check number')
+  }
+
+  deductFundsFromAccount(payeeId, total)
+
+  addFundsToAccount(payerId, total)
+
+  logTransaction(payerId, payeeId, total, 'check')
+
+  return {
+    message: 'Check payment successful',
   }
 }
 
@@ -76,7 +111,12 @@ function addFundsToAccount(id: string, amount: number) {
   }
 }
 
-function logTransaction(payerId: string, payeeId: string, amount: number) {
+function logTransaction(
+  payerId: string,
+  payeeId: string,
+  amount: number,
+  method: 'wire' | 'check'
+) {
   const payer = accounts.find((account) => account.id === payerId)
   const payee = accounts.find((account) => account.id === payeeId)
 
@@ -84,12 +124,14 @@ function logTransaction(payerId: string, payeeId: string, amount: number) {
     payer.transactions.push({
       id: Math.random().toString(36).substring(7),
       amount,
+      method,
       timestamp: Date.now(),
     })
 
     payee.transactions.push({
       id: Math.random().toString(36).substring(7),
       amount,
+      method,
       timestamp: Date.now(),
     })
   }

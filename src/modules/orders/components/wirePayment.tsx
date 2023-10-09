@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
+
 import Button from '@/modules/common/button'
+
 import { accounts, wire } from '@/lib/config/accounts'
 import { Account } from '@/lib/types'
 
@@ -10,6 +13,8 @@ export default function WirePayment({ total }: { total: number }) {
   const [amount, setAmount] = useState(total)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  
+  const router = useRouter()
 
   useEffect(() => {
     if (error !== '') {
@@ -23,31 +28,32 @@ export default function WirePayment({ total }: { total: number }) {
     e.preventDefault()
     setLoading(true)
 
+    const payee: Account = accounts.find(
+      (account) => account.accountNumber === '2468101214'
+    )!
+    if (!payee) {
+      setError(
+        'There was an error with the payable account. Please try again or contact support.'
+      )
+      return
+    }
+
+    const payer: Account = accounts.find(
+      (account) => account.accountNumber === accountNumber
+    )!
+    if (!payer) {
+      setError(
+        'Could not find the account number. Please try again or contact support.'
+      )
+      return
+    }
+
     try {
-      const payee: Account = accounts.find(
-        (account) => account.accountNumber === '2468101214'
-      )!
-      if (!payee) {
-        setError(
-          'There was an error with the payable account. Please try again or contact support.'
-        )
-        return
-      }
-
-      const payer: Account = accounts.find(
-        (account) => account.accountNumber === accountNumber
-      )!
-      if (!payer) {
-        setError(
-          'Could not find the account number. Please try again or contact support.'
-        )
-        return
-      }
-
       let res = await wire(payee.id, payer.id, amount)
       toast.success(res.message)
       setError('')
       setLoading(false)
+      return router.push('/')
     } catch (error: any) {
       toast.error(error.message)
     }
@@ -56,6 +62,7 @@ export default function WirePayment({ total }: { total: number }) {
   return (
     <>
       <form onSubmit={handleSubmit}>
+        {/* TODO: Validate Fields */}
         <div>
           <label htmlFor="amount">Name</label>
           <input

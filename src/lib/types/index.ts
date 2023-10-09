@@ -23,5 +23,13 @@ export type Account = {
 export type Transaction = {
   id: string
   amount: number
+  method: 'wire' | 'check'
   timestamp: number
+}
+
+export type Check = {
+  id: string
+  checkNumber: string
+  accountNumber: string
+  amount: number
 }

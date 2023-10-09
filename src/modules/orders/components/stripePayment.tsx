@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 import {
   useStripe,
   useElements,
@@ -22,6 +23,7 @@ export function PaymentForm({ amount, id }: { amount: number; id: string }) {
   }>({ status: 'initial' })
   const [loading, setLoading] = useState<boolean>(false)
 
+  const router = useRouter()
   const stripe = useStripe()
   const elements = useElements()
 
@@ -68,6 +70,7 @@ export function PaymentForm({ amount, id }: { amount: number; id: string }) {
           setPayment({ status: 'success' })
           toast.success('Payment successful')
           setLoading(false)
+          return router.push('/')
         })
         .catch((err) => {
           handlePaymentError(err)

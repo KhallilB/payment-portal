@@ -49,7 +49,7 @@ export default function PayOrderTemplate({ params }: Props) {
           <StripePayment total={order?.total!} id={order?.id!} />
         )}
         {selected === 'wire-transfer' && <WirePayment total={order?.total!} />}
-        {selected === 'check' && <CheckPayment />}
+        {selected === 'check' && <CheckPayment total={order?.total!} />}
       </div>
     </div>
   )
