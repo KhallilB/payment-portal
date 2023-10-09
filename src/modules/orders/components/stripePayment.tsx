@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 import {
   useStripe,
   useElements,
@@ -14,7 +14,7 @@ import Button from '@/modules/common/button'
 
 import getStripe from '@/lib/util/load-stripe'
 import { createPaymentIntent } from '@/lib/util/stripe'
-import { get } from 'http'
+import { payOrder, processOrder } from '@/lib/config/orders'
 
 export function PaymentForm({ amount, id }: { amount: number; id: string }) {
   const [paymentType, setPaymentType] = useState<string>('')
@@ -67,6 +67,13 @@ export function PaymentForm({ amount, id }: { amount: number; id: string }) {
             handlePaymentError(result.error)
             return
           }
+          if (paymentType === 'card') {
+            payOrder(id)
+          }
+          if (paymentType === 'us_bank_account') {
+            processOrder(id)
+          }
+
           setPayment({ status: 'success' })
           toast.success('Payment successful')
           setLoading(false)
@@ -79,6 +86,8 @@ export function PaymentForm({ amount, id }: { amount: number; id: string }) {
       handlePaymentError(err as StripeError)
     }
   }
+
+  if (!elements || !stripe) return null
 
   return (
     <>
@@ -97,12 +106,13 @@ export function PaymentForm({ amount, id }: { amount: number; id: string }) {
                 setPaymentType(e.value.type)
               }}
             />
+
             <div className="my-8 flex h-12 w-full items-center">
               <Button
                 type="submit"
                 className="mt-4 h-full disabled:opacity-50"
                 variant="primary"
-                disabled={!stripe || !elements || loading}
+                disabled={!stripe || !elements || !paymentType}
               >
                 {loading ? <Loading /> : 'Pay'}
               </Button>

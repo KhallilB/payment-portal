@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import PaymentTab from '@/modules/orders/components/paymentTab'
 import StripePayment from '@/modules/orders/components/stripePayment'
@@ -17,6 +17,12 @@ interface Props {
 export default function PayOrderTemplate({ params }: Props) {
   const [selected, setSelected] = useState('stripe')
   const [order, setOrder] = useState(Orders.find((o) => o.id === params.id))
+
+  useEffect(() => {
+    if (order?.paid === 'paid') {
+      return window.location.replace('/')
+    }
+  }, [order])
 
   return (
     <div className="container mx-auto p-6">
