@@ -6,14 +6,21 @@ import Button from '@/modules/common/button'
 
 import { accounts, wire } from '@/lib/config/accounts'
 import { Account } from '@/lib/types'
+import Input from '@/modules/common/input'
 
-export default function WirePayment({ total }: { total: number }) {
+export default function WirePayment({
+  total,
+  id,
+}: {
+  total: number
+  id: string
+}) {
   const [accountNumber, setAccountNumber] = useState<string>('')
   const [fullName, setFullName] = useState<string>('')
   const [amount, setAmount] = useState(total)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  
+
   const router = useRouter()
 
   useEffect(() => {
@@ -49,7 +56,7 @@ export default function WirePayment({ total }: { total: number }) {
     }
 
     try {
-      let res = await wire(payee.id, payer.id, amount)
+      let res = await wire(payee.id, payer.id, amount, id)
       toast.success(res.message)
       setError('')
       setLoading(false)
@@ -62,30 +69,23 @@ export default function WirePayment({ total }: { total: number }) {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        {/* TODO: Validate Fields */}
-        <div>
-          <label htmlFor="amount">Name</label>
-          <input
-            className="form-control"
-            type="text"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            placeholder="Jane Doe"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="amount">Account Number</label>
-          <input
-            className="form-control"
-            type="text"
-            value={accountNumber}
-            onChange={(e) => setAccountNumber(e.target.value)}
-            placeholder="Account Number"
-            required
-          />
-        </div>
-
+        <Input
+          label="Name"
+          name="name"
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+          placeholder="Jane Doe"
+          required
+        />
+        <Input
+          type="number"
+          label="Account Number"
+          name="accountNumber"
+          value={accountNumber}
+          onChange={(e) => setAccountNumber(e.target.value)}
+          placeholder="Account Number"
+          required
+        />
         <div>
           <Button
             type="submit"

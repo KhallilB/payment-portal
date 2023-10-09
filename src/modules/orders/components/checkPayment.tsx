@@ -6,8 +6,15 @@ import Button from '@/modules/common/button'
 
 import { Account } from '@/lib/types'
 import { accounts, payByCheck } from '@/lib/config/accounts'
+import Input from '@/modules/common/input'
 
-export default function CheckPayment({ total }: { total: number }) {
+export default function CheckPayment({
+  total,
+  id,
+}: {
+  total: number
+  id: string
+}) {
   const [accountNumber, setAccountNumber] = useState<string>('')
   const [checkNumber, setCheckNumber] = useState<string>('')
   const [checkAmount, setCheckAmount] = useState<number>(total)
@@ -68,39 +75,32 @@ export default function CheckPayment({ total }: { total: number }) {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="amount">Name</label>
-          <input
-            className="form-control"
-            type="text"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            placeholder="Jane Doe"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="amount">Account Number</label>
-          <input
-            className="form-control"
-            type="text"
-            value={accountNumber}
-            onChange={(e) => setAccountNumber(e.target.value)}
-            placeholder="Account Number"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="amount">Check Number</label>
-          <input
-            className="form-control"
-            type="text"
-            value={checkNumber}
-            onChange={(e) => setCheckNumber(e.target.value)}
-            placeholder="Check Number"
-            required
-          />
-        </div>
+        <Input
+          label="Name"
+          name="name"
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+          placeholder="Jane Doe"
+          required
+        />
+        <Input
+          type="number"
+          label="Account Number"
+          name="accountNumber"
+          value={accountNumber}
+          onChange={(e) => setAccountNumber(e.target.value)}
+          placeholder="Account Number"
+          required
+        />
+        <Input
+          type="number"
+          label="Check Number"
+          name="checkNumber"
+          value={checkNumber}
+          onChange={(e) => setCheckNumber(e.target.value)}
+          placeholder="Check Number"
+          required
+        />
 
         <div>
           <Button

@@ -1,4 +1,5 @@
-import { Account, Check } from '@/lib/types'
+import { Account, Check, Order } from '@/lib/types'
+import { processOrder } from './orders'
 
 export const accounts: Account[] = [
   {
@@ -37,7 +38,8 @@ export const checks: Check[] = [
 export const wire = async (
   payeeId: string,
   payerId: string,
-  amount: number
+  amount: number,
+  orderId: string
 ) => {
   const sufficientFunds = checkSufficientFunds(payeeId, amount)
   if (!sufficientFunds) {
@@ -49,6 +51,8 @@ export const wire = async (
   addFundsToAccount(payerId, amount)
 
   logTransaction(payerId, payeeId, amount, 'check')
+
+  processOrder(orderId)
 
   return {
     message: 'Wire transfer successful',
