@@ -9,6 +9,7 @@ import WirePayment from '@/modules/orders/components/wirePayment'
 import Button from '@/modules/common/button'
 
 import { Orders } from '@/lib/config/orders'
+import OrderDetails from '../components/orderDetails'
 
 interface Props {
   params: {
@@ -29,7 +30,7 @@ export default function PayOrderTemplate({ params }: Props) {
   }, [order])
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto lg:w-9/12 lg:p-6">
       <div className="flex w-full flex-row items-center justify-between">
         <h2 className="text-2xl">Pay Order #{params.id}</h2>
         <div>
@@ -39,7 +40,9 @@ export default function PayOrderTemplate({ params }: Props) {
         </div>
       </div>
 
-      <div className="my-8">
+      <OrderDetails order={order!} />
+
+      <div className="my-4">
         <h2 className="my-4 text-xl font-bold">Choose a payment type</h2>
         <div className="flex h-16 w-full flex-row justify-start">
           <PaymentTab

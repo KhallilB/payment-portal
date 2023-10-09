@@ -1,3 +1,5 @@
+import OrderDetailsTemplate from '@/modules/orders/templates/orderDetailsTemplate'
+
 interface Props {
   params: {
     id: string
@@ -5,9 +7,5 @@ interface Props {
 }
 
 export default function Order({ params }: Props) {
-  return (
-    <div className="container mx-auto p-6">
-      <h1>Order {params.id}</h1>
-    </div>
-  )
+  return <OrderDetailsTemplate params={params} />
 }
