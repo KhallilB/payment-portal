@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Payment Portal Demo
+
+## About
+
+A payment portal that showcases the ability to handle various payment methods, including credit and debit cards, ACH deposits, wires, and checks.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**[Node](https://nodejs.org/en)**
+or
+**[Bun](https://bun.sh/docs/installation)**
+
+### Installation
+
+1. Clone the repo
+   ```sh
+   git clone
+   ```
+2. Install packages
+   ```sh
+   npm install
+   # or
+   bun install
+   ```
+3. Create ENV file in project root; Use values emailed to you
+   ```sh
+   touch .env.local
+   ```
+4. Run development server
+   ```sh
+   npm run dev
+   # or
+   bun dev
+   ```
+
+#### To run a prouction build:
+
+1. Create a NextJS build
+
+```sh
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Run the build
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```sh
+npm run start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Making Payments
 
-## Learn More
+**Stripe**:
+When paying with stripe Card you can use any **Month**, **CVV**, **Zip Code**. To test different codes use the table below.
 
-To learn more about Next.js, take a look at the following resources:
+When paying with a bank account use the test accounts provided by Stripe.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Card Number      | Status             |
+| ---------------- | ------------------ |
+| 4242424242424242 | Success            |
+| 4000000000000002 | Decline            |
+| 4000000000009995 | Insufficient Funds |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+**Wire**:
+When paying with a wire. You can use any **Name**. To test different codes use the table below.
 
-## Deploy on Vercel
+| Account Number | Status             |
+| -------------- | ------------------ |
+| 123456789      | Success            |
+| 423514235      | Incorrect Account  |
+| 987654321      | Insufficient Funds |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Check**:
+When paying with a check. You can use any **Name**. To test different codes use the table below.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+| Account Number | Check Number | Status            |
+| -------------- | ------------ | ----------------- |
+| 123456789      | 1234         | Success           |
+| 423514235      | 4321         | Incorrect Account |

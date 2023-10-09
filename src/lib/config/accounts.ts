@@ -13,7 +13,7 @@ export const accounts: Account[] = [
     id: '4151',
     name: 'Test Account 2',
     accountNumber: '987654321',
-    balance: 500,
+    balance: 0,
     transactions: [],
   },
   {
