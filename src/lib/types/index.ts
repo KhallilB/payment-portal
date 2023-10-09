@@ -11,3 +11,17 @@ export type Product = {
   price: number
   quantity: number
 }
+
+export type Account = {
+  id: string
+  name: string
+  accountNumber: string
+  balance: number
+  transactions: Transaction[]
+}
+
+export type Transaction = {
+  id: string
+  amount: number
+  timestamp: number
+}

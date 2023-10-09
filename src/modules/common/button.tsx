@@ -8,7 +8,6 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 export default function Button({
   children,
   variant,
-  className,
   ...props
 }: Props) {
   return (
@@ -20,7 +19,7 @@ export default function Button({
           'bg-blue-500': variant === 'primary',
           'bg-gray-500': variant === 'secondary',
         },
-        className
+        props.className
       )}
     >
       {children}

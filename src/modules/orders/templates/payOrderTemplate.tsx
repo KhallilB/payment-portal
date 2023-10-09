@@ -6,7 +6,7 @@ import StripePayment from '@/modules/orders/components/stripePayment'
 import CheckPayment from '@/modules/orders/components/checkPayment'
 import WirePayment from '@/modules/orders/components/wirePayment'
 
-import { Orders } from '@/lib/config/index'
+import { Orders } from '@/lib/config/orders'
 
 interface Props {
   params: {
@@ -45,8 +45,10 @@ export default function PayOrderTemplate({ params }: Props) {
       </div>
 
       <div className="mt-4">
-        {selected === 'stripe' && <StripePayment total={order?.total!} id={order?.id!} />}
-        {selected === 'wire-transfer' && <WirePayment />}
+        {selected === 'stripe' && (
+          <StripePayment total={order?.total!} id={order?.id!} />
+        )}
+        {selected === 'wire-transfer' && <WirePayment total={order?.total!} />}
         {selected === 'check' && <CheckPayment />}
       </div>
     </div>
